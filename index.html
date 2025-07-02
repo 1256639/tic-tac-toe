@@ -9,8 +9,23 @@
 </head>
 <body>
     <h1>Tic Tac Toe</h1>
-    <div id="game-status"></div>
-    <div id="board"></div>
-    <button id="reset-btn">Restart</button>
+    <div id="player-form-container">
+        <form id="player-form">
+            <label>
+                Player X name: 
+                <input type="text" id="player1-name" required>
+            </label>
+            <label>
+                Player O name:
+                <input type="text" id="player2-name" required>
+            </label>
+            <button type="submit">Start game</button>
+        </form>
+    </div>
+    <div id="game-container" style="display:none;">
+        <div id="game-status"></div>
+        <div id="board"></div>
+        <button id="reset-btn">Restart</button>
+    </div>   
 </body>
 </html>

@@ -23,11 +23,17 @@ function createPlayer(name, marker) {
 }
 
 const GameController = (function () {
-    const player1 = createPlayer("Player 1", "X");
-    const player2 = createPlayer("Player 2", "O");
+    let player1 = createPlayer("Player 1", "X");
+    let player2 = createPlayer("Player 2", "O");
     let currentPlayer = player1;
     let winner = null;
     let tie = false;
+
+    const setPlayers = (name1, name2) => {
+        player1 = createPlayer(name1, "X");
+        player2 = createPlayer(name2, "O");
+        currentPlayer = player1;
+    };
 
     const playRound = (index) => {
         if (winner || tie) {
@@ -83,23 +89,19 @@ const GameController = (function () {
         return board.every(cell => cell) && !checkWinner();
     };
 
-    return { playRound, getCurrentPlayer, getWinner, isGameTied, reset };
+    return { playRound, getCurrentPlayer, getWinner, isGameTied, reset, setPlayers, player1: () => player1, player2: () => player2 };
 })();
-
-/*GameController.reset();
-GameController.playRound(0);
-GameController.playRound(3);
-GameController.playRound(1);
-GameController.playRound(4);
-GameController.playRound(2);*/
-
-console.log(GameController.getWinner());
-console.log(GameController.isGameTied());
 
 const DisplayController = (function() {
     const boardDiv = document.getElementById('board');
     const statusDiv = document.getElementById('game-status');
     const resetBtn = document.getElementById('reset-btn');
+    const gameContainer = document.getElementById('game-container');
+    const playerFormContainer = document.getElementById('player-form-container');
+    const playerForm = document.getElementById('player-form');
+    playerForm.addEventListener('submit', handlePlayerFormSubmit);
+    const player1Input = document.getElementById('player1-name');
+    const player2Input = document.getElementById('player2-name');
     const cells = [];
 
     function setupBoard() {
@@ -126,11 +128,13 @@ const DisplayController = (function() {
 
     function renderStatus() {
         if (GameController.getWinner()) {
-            statusDiv.textContent = "Winner: " + GameController.getWinner() + " !";
+            let winnerMarker = GameController.getWinner();
+            let winnerName = winnerMarker === "X" ? GameController.player1().name : GameController.player2().name;
+            statusDiv.textContent = "Winner: " + winnerName + "!";
         } else if (GameController.isGameTied()) {
             statusDiv.textContent = "It's a tie!";
         } else {
-            statusDiv.textContent = "Turn: " + GameController.getCurrentPlayer().marker
+            statusDiv.textContent = "Turn: " + GameController.getCurrentPlayer().name;
         }
     }
 
@@ -145,6 +149,20 @@ const DisplayController = (function() {
         GameController.reset();
         renderBoard();
         renderStatus();
+    }
+
+    function handlePlayerFormSubmit(e) {
+        e.preventDefault();
+        const name1 = player1Input.value.trim();
+        const name2 = player2Input.value.trim();
+        if(name1 && name2) {
+            GameController.setPlayers(name1, name2);
+            playerFormContainer.style.display = 'none';
+            gameContainer.style.display = '';
+            GameController.reset();
+            renderBoard();
+            renderStatus();
+        }
     }
 
     setupBoard();
