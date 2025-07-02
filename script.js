@@ -86,12 +86,72 @@ const GameController = (function () {
     return { playRound, getCurrentPlayer, getWinner, isGameTied, reset };
 })();
 
-GameController.reset();
+/*GameController.reset();
 GameController.playRound(0);
 GameController.playRound(3);
 GameController.playRound(1);
 GameController.playRound(4);
-GameController.playRound(2);
+GameController.playRound(2);*/
 
 console.log(GameController.getWinner());
 console.log(GameController.isGameTied());
+
+const DisplayController = (function() {
+    const boardDiv = document.getElementById('board');
+    const statusDiv = document.getElementById('game-status');
+    const resetBtn = document.getElementById('reset-btn');
+    const cells = [];
+
+    function setupBoard() {
+        for (let i = 0; i < 9; i++) {
+            const cellDiv = document.createElement('div');
+            cellDiv.classList.add('cell');
+            cellDiv.dataset.index = i;
+            cellDiv.addEventListener('click', handleCellClick);
+            cells.push(cellDiv);
+            boardDiv.appendChild(cellDiv);
+        }
+    }
+
+    function renderBoard() {
+        const board = Gameboard.getBoard();
+        for (let i = 0; i < 9; i++) {
+            cells[i].textContent = board[i];
+            cells[i].style.pointerEvents = '';
+            if (board[i] || GameController.getWinner() || GameController.isGameTied()) {
+                cells[i].style.pointerEvents = 'none';
+            }
+        }
+    }
+
+    function renderStatus() {
+        if (GameController.getWinner()) {
+            statusDiv.textContent = "Winner: " + GameController.getWinner() + " !";
+        } else if (GameController.isGameTied()) {
+            statusDiv.textContent = "It's a tie!";
+        } else {
+            statusDiv.textContent = "Turn: " + GameController.getCurrentPlayer().marker
+        }
+    }
+
+    function handleCellClick(e) {
+        const ix = parseInt(e.target.dataset.index);
+        GameController.playRound(ix);
+        renderBoard();
+        renderStatus();
+    }
+
+    function handleReset() {
+        GameController.reset();
+        renderBoard();
+        renderStatus();
+    }
+
+    setupBoard();
+    resetBtn.addEventListener('click', handleReset);
+    renderBoard();
+    renderStatus();
+
+    return { renderBoard, renderStatus }
+
+})();

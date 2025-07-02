@@ -1,3 +1,62 @@
+#board {
+    display: grid;
+    grid-template-columns: repeat(3, 80px);
+    grid-template-rows: repeat(3, 80px);
+    gap: 5px;
+    margin-bottom: 1em;
+}
+
+.cell {
+    background: #f0f0f0;
+    font-size: 2.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    height: 80px;
+    width: 80px;
+    border: 1px solid #bbb;
+    user-select: none;
+    transition: background 0.2s;
+}
+
+.cell:hover {
+    background: #e0e0e0;
+}
+
+#game-status {
+    margin-bottom: 1em;
+    font-weight: bold;
+    font-size: 1.2em;
+    text-align: center;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #fafaff;
+    font-family: sans-serif;
+}
+
 h1 {
-    color: red;
+    margin-bottom: 1em;
+}
+
+#reset-btn {
+    padding: 0.5em 2em;
+    font-size: 1em;
+    background: #59c3c3;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    margin-top: 0.5em;
+    transition: background 0.2s;
+}
+
+#reset-btn:hover {
+    background: #2e8282;
 }
