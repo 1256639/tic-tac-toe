@@ -171,5 +171,4 @@ const DisplayController = (function() {
     renderStatus();
 
     return { renderBoard, renderStatus }
-
 })();
